@@ -5,7 +5,12 @@ msg_error() {
 }
 run() {
 	echo "Running..."
-	qemu-system-i386 -m 1024 -cpu qemu32 -drive if=none,id=usbstick,format=raw,file=bootable_drive.bin -usb -device nec-usb-xhci,id=xhci -device usb-storage,bus=xhci.0,drive=usbstick
+	qemu-system-i386 -m 1024 \
+	-cpu qemu32 \
+	-drive if=none,id=usbstick,format=raw,file=bootable_drive.bin \
+	-usb \
+	-device nec-usb-xhci,id=xhci \
+	-device usb-storage,bus=xhci.0,drive=usbstick
 }
 build() {
 	echo "Assembling..."
