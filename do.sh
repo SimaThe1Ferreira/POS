@@ -29,14 +29,13 @@ build() {
 if [ "$#" -gt 1 ]
 then
 	msg_error
-	exit 1
 fi
 if [ "$#" -eq 0 ]
 then
 	build
 	run
-	exit 1
 fi
+exit 1
 case "$1" in
 	"build")
 		build
