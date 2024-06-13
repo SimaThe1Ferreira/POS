@@ -7,6 +7,8 @@ run() {
 	echo "Running..."
 	qemu-system-i386 -m 1024 \
 	-cpu qemu32 \
+	-smp 1 \
+	-M q35 \
 	-drive if=none,id=usbstick,format=raw,file=bootable_drive.bin \
 	-usb \
 	-device nec-usb-xhci,id=xhci \
@@ -44,7 +46,7 @@ case "$1" in
 	;;
 	"install")
 		sudo apt update
-		sudo apt install qemu-system-x86 hexedit binutils gcc bochs bochsbios vgabios bochs-x
+		sudo apt install qemu-system-x86 hexedit binutils
 	;;
 	*)
 		msg_error
