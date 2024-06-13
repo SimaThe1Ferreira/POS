@@ -45,7 +45,9 @@ case "$1" in
 		run
 	;;
 	"install")
+		echo "Updating packages repository info..."
 		sudo apt update
+		echo "Installing..."
 		sudo apt install qemu-system-x86 hexedit binutils
 	;;
 	*)
