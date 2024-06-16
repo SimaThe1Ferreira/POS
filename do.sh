@@ -9,39 +9,31 @@ debug_kernel() {
 }
 run() {
 	echo "Booting..."
-	qemu-system-i386 -accel kvm -m 1024 -smp 1 -M q35 -drive format=raw,file=Build/bootable_drive.bin
+	sudo qemu-system-i386 -accel kvm -m 1024 -smp 1 -M q35 -drive format=raw,file=Build/bootable_drive.bin
 }
 assemble_bootloader() {
 	echo "Assembling bootloader..."
-        as Bootloader/main.s -I/home/amnesia/Persistent/Desktop/POS/Bootloader -o Build/bootloader.o
+        as Source/Bootloader/bootloader.s -I/home/ferreira/POS/Source/Bootloader -o Build/bootloader.o --32
 }
 assemble_kernel() {
 	echo "Assembling kernel..."
-	as Kernel/main.s -o Build/kernel.o -g --32
+	as Source/main.s -o Build/kernel.o -g --32
 }
 link_kernel() {
 	echo "Linking kernel..."
-        ld Build/kernel.o -melf_i386 -T memory_map.ld -e main -o Build/kernel.elf32 --oformat "elf32-i386"
+        ld Build/kernel.o -m elf_i386 -T memory_map.ld -e main -o Build/kernel.elf32 --oformat "elf32-i386"
 }
-link_bootloader() {
-	echo "Linking bootloader..."
-	ld Build/bootloader.o -T memory_map.ld -e main -o Build/bootloader.bin --oformat "binary"
-}
-convert_kernel() {
-	echo "Converting kernel..."
-	objcopy Build/kernel.elf32 -O binary Build/kernel.bin
+link_OS() {
+	echo "Linking..."
+	ld Build/bootloader.o Build/kernel.o -m elf_i386 -T memory_map.ld -e main -o Build/bootloader.bin --oformat "binary"
 }
 creat_drive_image() {
 	echo "Creating drive image..."
         dd if=/dev/zero of=Build/bootable_drive.bin bs=512 count=2880 status=none
 }
-insert_bootloader() {
-	echo "Inserting bootloader..."
+insert_OS() {
+	echo "Inserting OS..."
         dd if=Build/bootloader.bin of=Build/bootable_drive.bin seek=0 conv=notrunc status=none
-}
-insert_kernel() {
-	echo "Inserting kernel..."
-	dd if=Build/kernel.bin of=Build/bootable_drive.bin seek=1 conv=notrunc status=none
 }
 if [ "$#" -gt 1 ]
 then
@@ -59,12 +51,9 @@ case "$1" in
 	"build")
 		assemble_bootloader
         	assemble_kernel
-        	link_bootloader
-        	link_kernel
-        	convert_kernel
+        	link_OS
         	creat_drive_image
-        	insert_bootloader
-        	insert_kernel
+        	insert_OS
 	;;
 	"run")
 		run
