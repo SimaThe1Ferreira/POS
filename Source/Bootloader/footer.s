@@ -1,2 +1,0 @@
-.skip 269, 0
-.byte 0x55, 0xAA
