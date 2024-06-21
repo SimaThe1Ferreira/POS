@@ -13,7 +13,7 @@ run() {
 }
 assemble_bootloader() {
 	echo "Assembling bootloader..."
-        as Source/Bootloader/bootloader.s -I/home/ferreira/POS/Source/Bootloader -o Build/bootloader.o --32
+        as Source/Bootloader/start.s -I/home/ferreira/POS/Source/Bootloader -o Build/bootloader.o --32
 }
 assemble_kernel() {
 	echo "Assembling kernel..."
