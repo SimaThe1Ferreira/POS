@@ -1,5 +1,5 @@
 .intel_syntax noprefix
-.code32
+.code64
 .global _start
 _start:
 	jmp .
