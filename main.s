@@ -2,4 +2,4 @@
 .code64
 .global _start
 _start:
-	jmp .
+	JMP .
