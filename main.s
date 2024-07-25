@@ -1,5 +1,3 @@
-.intel_syntax noprefix
-.code64
-.global _start
+bits 64
 _start:
-	JMP .
+	JMP $
