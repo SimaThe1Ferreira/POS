@@ -1,11 +1,10 @@
 BITS 16
-global main
-main:
+_start:
 	JMP 0:(.FlushCS + 0x7C00)
 .FlushCS:
 	XOR ax, ax
 	MOV ss, ax
-	MOV sp, main
+	MOV sp, 0x7C00
 	MOV ds, ax
 	MOV es, ax
 	CLD
@@ -63,8 +62,6 @@ LongMode:
 	MOV BYTE [0xB8400], 'A'
 	MOV BYTE [0xB8401], 7
 	JMP $
-section .data
-ALIGN 4
 IDT:
 .Length:
 	dw 0
@@ -81,7 +78,6 @@ ALIGN 4
 .Pointer:
 	dw $ - GDT - 1 + 0x7C00
 	dd GDT + 0x7C00
-section .text
 ; Input: bx = cell
 set_cursor_cell:
         PUSH ax
