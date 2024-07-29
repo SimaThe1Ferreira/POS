@@ -13,4 +13,4 @@ dd if=main.bin of=bootable_drive.bin seek=1 conv=notrunc status=none
 echo "Clearing..."
 rm main.bin start.bin
 echo "Booting..."
-sudo qemu-system-x86_64 -accel kvm -m 1024 -smp 1 -M q35 -drive format=raw,file=bootable_drive.bin
+bochs -f bochs_config

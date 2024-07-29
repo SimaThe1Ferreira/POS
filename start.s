@@ -1,10 +1,11 @@
 BITS 16
-Main:
+global main
+main:
 	JMP 0:(.FlushCS + 0x7C00)
 .FlushCS:
 	XOR ax, ax
 	MOV ss, ax
-	MOV sp, Main
+	MOV sp, main
 	MOV ds, ax
 	MOV es, ax
 	CLD
@@ -62,6 +63,7 @@ LongMode:
 	MOV BYTE [0xB8400], 'A'
 	MOV BYTE [0xB8401], 7
 	JMP $
+section .data
 ALIGN 4
 IDT:
 .Length:
@@ -79,5 +81,41 @@ ALIGN 4
 .Pointer:
 	dw $ - GDT - 1 + 0x7C00
 	dd GDT + 0x7C00
-	times 510 - ($-$$) db 0
-	dw 0xAA55
+section .text
+; Input: bx = cell
+set_cursor_cell:
+        PUSH ax
+        PUSH bx
+        PUSH dx
+        MOV dx, 0x03D4
+        MOV al, 0x0F
+        OUT dx, al
+        INC dl
+        MOV al, bl
+        OUT dx, al
+        DEC dl
+        MOV al, 0x0E
+        OUT dx, al
+        INC dl
+        MOV al, bh
+        OUT dx, al
+        POP dx
+        POP bx
+        POP ax
+        RET
+; Input: ah = color, esi = source address, edi = destination address */
+store_words:
+        PUSH rsi
+        PUSH ax
+        PUSH rdi
+.print_char:
+        LODSB
+        STOSW
+        CMP BYTE [esi], 0
+        JNE .print_char
+        POP rdi
+        POP ax
+        POP rsi
+        RET
+	TIMES 510 - ($-$$) DB 0
+	DW 0xAA55
